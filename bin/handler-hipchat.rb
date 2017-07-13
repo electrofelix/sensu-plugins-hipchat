@@ -24,8 +24,8 @@
 
 require 'sensu-handler'
 require 'hipchat'
-require 'timeout'
 require 'erubis'
+require 'retriable'
 
 class HipChatNotif < Sensu::Handler
   option :json_config,
@@ -49,6 +49,8 @@ class HipChatNotif < Sensu::Handler
     from = settings[json_config]['from'] || 'Sensu'
     message_template = settings[json_config]['message_template']
     message_format = settings[json_config]['message_format'] || 'html'
+    retries = settings[json_config]['retries'] || 3
+    timeout = settings[json_config]['timeout'] || 3
 
     # If the playbook attribute exists and is a URL, "[<a href='url'>playbook</a>]" will be output.
     # To control the link name, set the playbook value to the HTML output you would like.
@@ -84,7 +86,7 @@ class HipChatNotif < Sensu::Handler
     message = eruby.result(binding)
 
     begin
-      timeout(3) do
+      Retriable.retriable tries: retries, timeout: timeout do
         if @event['action'].eql?('resolve')
           hipchatmsg[room].send(from, message, color: 'green', message_format: message_format)
         else

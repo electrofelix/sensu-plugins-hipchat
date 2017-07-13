@@ -31,6 +31,7 @@ Gem::Specification.new do |s|
   s.add_runtime_dependency 'sensu-plugin', '~> 1.2'
   s.add_runtime_dependency 'hipchat',      '1.5.1'
   s.add_runtime_dependency 'erubis',       '2.7.0'
+  s.add_runtime_dependency 'retriable',    '~> 3.0.2'
 
   s.add_development_dependency 'bundler',                   '~> 1.7'
   s.add_development_dependency 'codeclimate-test-reporter', '~> 0.4'

@@ -21,10 +21,18 @@
     "room": "Ops",
     "from": "Sensu",
     "message_template": "optional message template erb file path - /some/path/to/template.erb",
-    "message_format": "html"
+    "message_format": "html",
+    "timeout": 3,
+    "retries": 3
   }
 }
 ```
+
+This plugin uses https://github.com/kamui/retriable to handle retries, which
+uses a randomized exponential backoff between retries. As a result, as the
+numbers of retries configured increases, the total time taken will exceed
+`retries * timeout`.
+
 ## Installation
 
 [Installation and Setup](http://sensu-plugins.io/docs/installation_instructions.html)
